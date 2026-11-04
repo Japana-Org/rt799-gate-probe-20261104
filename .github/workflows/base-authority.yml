@@ -1,0 +1,22 @@
+name: Base authority probe
+
+on:
+  pull_request_target:
+    branches: [main]
+
+permissions: {}
+
+jobs:
+  trusted-base-authority:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - name: Record event binding
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          printf 'event base=%s\n' "$BASE_SHA"
+          printf 'event head=%s\n' "$HEAD_SHA"
+          test "$GITHUB_SHA" = "$BASE_SHA"
